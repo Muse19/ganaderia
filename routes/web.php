@@ -18,4 +18,8 @@ Route::get('/', function () {
 Route::get('/profile', 'FeedlotController@getAllProfile');
 Route::get('/balance', 'FeedlotController@getSimpleBalance');
 Route::get('/evolution', 'FeedlotController@getEvolutionBalance');
+Route::get('/oscilacion-kg', 'FeedlotController@getOscKg');
+Route::get('/oscilacion-percent', 'FeedlotController@getOscPercent');
+Route::get('/achievement', 'FeedlotController@getAchievementExpected');
+
 

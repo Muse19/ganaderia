@@ -34,16 +34,33 @@ trait Helper{
                          ->unique();
     }
 
-    private function getColor($start_weight, $end_weight){
+    private function getColor($start_weight, $end_weight, $type, $osc){
         
-        $result = $end_weight - $start_weight;
+        if($type==0){
+            $result = $end_weight - $start_weight;
+        }else{
+            $result = $this->percentAchieved($start_weight, $end_weight);
+        }
 
-        if ($result > 0){
+        if ($result > $osc){
             return '#008000';
-        }elseif ($result == 0) {
+        }elseif ($result >= 0 && $result <= $osc ) {
             return '#FFFF00';
         }
         return '#ff9900';
+    }
+
+    private function getIncrement($cattle, $final_weight, $term){
+
+        $result = ($final_weight - $cattle->feedlots()->first()->weight)/$term;
+        return round($result,2);
+    }
+
+    private function getKg($start_date, $end_date, $increment){
+
+        $days = Carbon::parse($end_date)->diffInDays($start_date);
+
+        return round($days * $increment, 2);
     }
 
 
@@ -165,7 +182,7 @@ trait Helper{
 
     }
 
-    private function getEvolution(Collection $collection, $from, $to){
+    private function getEvolution(Collection $collection, $from, $to, $osc=0.0 , $type=0 ){
 
         $rangeDate = $this->getRangeDate($from, $to);
 
@@ -191,7 +208,7 @@ trait Helper{
                             'weight' =>  $data->weight,
                             'kg_achieved' => $data->weight - $start_weight,
                             'percent' => $this->percentAchieved($start_weight, $data->weight),
-                            'color' => $this->getColor($start_weight, $data->weight),
+                            'color' => $this->getColor($start_weight, $data->weight, $type, $osc),
                         ]; 
                         
                     }
@@ -224,6 +241,71 @@ trait Helper{
 
         return [$array, array_reverse($rangeDate->toArray()), array_reverse($totalWeights)];
     }
+
+    private function getAchievement(Collection $collection, $from, $to, $term, $final_weight, $osc){
+
+        $rangeDate = $this->getRangeDate($from, $to);
+
+        $array = [];
+    
+        foreach($collection as $cattle){
+
+            $weights = [];
+            $start_weight = 0.0;
+            $start_date = '';
+            $increment = $this->getIncrement($cattle, $final_weight, $term);
+
+            foreach($rangeDate as $i => $date){
+               
+                $data = $cattle->feedlots()->where('date', $date)->first();
+
+                    if($start_weight == 0.0 || !isset($data->weight)){
+                        $weight = (object)[
+                            'weight' => isset($data->weight) ? $data->weight : null,
+                        ];
+                    }else{
+                        
+                        $kg = $this->getKg($start_date, $data->date, $increment);
+                        $expected_weight = $start_weight + $kg;
+                        $weight = (object)[
+                            'current_weight' =>  $data->weight,
+                            'kg' => $kg,
+                            'expected_weight' => $expected_weight,
+                            'days' => Carbon::parse($data->date)->diffInDays(Carbon::parse($start_date)),
+                            'color' => $this->getColor($expected_weight, $data->weight, 0, $osc),
+                        ]; 
+                        
+                    }
+                   
+                    $start_weight = isset($data->weight) ? $data->weight : $start_weight;
+                    $start_date = isset($data->weight) ? $data->date : $start_date;
+                 
+                
+                    array_push($weights, $weight);
+            }
+            
+            $days =  Carbon::parse($cattle->feedlots->last()->date)->diffInDays($cattle->feedlots->first()->date);
+            $kg = $cattle->feedlots->last()->weight - $cattle->feedlots->first()->weight;
+            $cattle_dates = (object)[
+                'cattle' => (object)[
+                    'id' => $cattle->id,
+                    'number' => $cattle->number,
+                    'lot' => $cattle->lot->number,
+                    'category' => $cattle->category->name,
+                    'days' => $days,
+                    'kg_achieved' =>$kg,
+                    'term' => $term - $days,
+                    'expected_kg' => round($days * $increment, 2),
+                ],
+                'weights' => array_reverse($weights)    
+            ];
+
+            array_push($array, $cattle_dates);
+        }
+
+        return [$array, array_reverse($rangeDate->toArray())];
+    }
+
 
 
 }
