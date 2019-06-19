@@ -17,9 +17,9 @@ class Feedlot extends Model
         return $this->belongsTo(Cattle::class);
     }
 
-    public function getDateAttribute($value){
+   /*  public function getDateAttribute($value){
         return Carbon::parse($value)->format('d-m-Y');
-    }
+    } */
 
    
 }

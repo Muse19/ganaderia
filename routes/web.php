@@ -16,3 +16,6 @@ Route::get('/', function () {
 });
 
 Route::get('/profile', 'FeedlotController@getAllProfile');
+Route::get('/balance', 'FeedlotController@getSimpleBalance');
+Route::get('/evolution', 'FeedlotController@getEvolutionBalance');
+

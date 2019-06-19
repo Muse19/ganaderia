@@ -12,16 +12,36 @@ class FeedlotController extends Controller
 
     public function getAllProfile(){
 
-        $cattles = Cattle::has('feedlots')->get();
+        $cattle = Cattle::has('feedlots')->get();
 
-        return $this->getProfile($cattles);
+        return $this->getProfile($cattle);
     }
 
     public function getSpecificProfile(Request $request){
 
-        $cattles = Cattle::whereIn('number', $request->cattles)->get();
+        $cattle = Cattle::whereIn('number', $request->cattle)->get();
 
-        return $this->getProfile($cattles);
+        return $this->getProfile($cattle);
+    }
+
+    public function getSimpleBalance(Request $request){
+
+        $from = $this->minDate([1,2]);
+        $to = $this->maxDate([1,2]);
+
+        $cattle = Cattle::whereIn('id', [1,2])->get();
+
+        return $this->getBalance($cattle, $from, $to);
+
+    }
+
+    public function getEvolutionBalance(Request $request){
+        $from = $this->minDate([1,2]);
+        $to = $this->maxDate([1,2]);
+
+        $cattle = Cattle::whereIn('id', [1,2])->get();
+
+        return $this->getEvolution($cattle, $from, $to);
     }
 
     

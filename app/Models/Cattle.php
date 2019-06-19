@@ -7,6 +7,7 @@ use App\Models\Dose;
 use App\Models\Race;
 use App\Models\Feedlot;
 use App\Models\Category;
+use App\Models\CattleLot;
 use Illuminate\Database\Eloquent\Model;
 
 class Cattle extends Model
@@ -38,5 +39,9 @@ class Cattle extends Model
 
     public function feedlots(){
         return $this->HasMany(Feedlot::class);
+    }
+
+    public function lot_log(){
+        return $this->hasMany(CattleLot::class);
     }
 }

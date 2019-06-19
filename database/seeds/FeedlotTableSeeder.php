@@ -77,6 +77,15 @@ class FeedlotTableSeeder extends Seeder
         $feedlot->date = Carbon::parse('2019-04-30');
         $feedlot->save();
 
+        $feedlot = new Feedlot();
+        $feedlot->cattle_id = 2;
+        $feedlot->lot_id = 4;
+        $feedlot->weight = 375;
+        $feedlot->date = Carbon::parse('2019-05-20');
+        $feedlot->save();
+
+
+
         //*******************************************************
         $feedlot = new Feedlot();
         $feedlot->cattle_id = 3;
