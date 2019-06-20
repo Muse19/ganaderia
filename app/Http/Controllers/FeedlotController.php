@@ -26,54 +26,54 @@ class FeedlotController extends Controller
 
     public function getSimpleBalance(Request $request){
 
-        $from = $this->minDate([1,2]);
-        $to = $this->maxDate([1,2]);
+        $from = $this->minDate([1],2);
+        $to = $this->maxDate([1],2);
 
-        $cattle = Cattle::whereIn('id', [1,2])->get();
+        $cattle = Cattle::whereIn('id', [1])->get();
 
         return $this->getBalance($cattle, $from, $to);
 
     }
 
     public function getEvolutionBalance(Request $request){
-        $from = $this->minDate([1,2]);
-        $to = $this->maxDate([1,2]);
+        $from = $this->minDate([1],2);
+        $to = $this->maxDate([1],2);
 
-        $cattle = Cattle::whereIn('id', [1,2])->get();
+        $cattle = Cattle::whereIn('id', [1])->get();
 
         return $this->getEvolution($cattle, $from, $to);
     }
 
     public function getOscKg(Request $request){
         
-        $from = $this->minDate([1,2]);
-        $to = $this->maxDate([1,2]);
+        $from = $this->minDate([1],2);
+        $to = $this->maxDate([1],2);
         $osc = 3;
-        $cattle = Cattle::whereIn('id', [1,2])->get();
+        $cattle = Cattle::whereIn('id', [1])->get();
 
         return $this->getEvolution($cattle, $from, $to, $osc);
     }
 
     public function getOscPercent(Request $request){
         
-        $from = $this->minDate([1,2]);
-        $to = $this->maxDate([1,2]);
+        $from = $this->minDate([1],2);
+        $to = $this->maxDate([1],2);
         $osc = 2;
-        $cattle = Cattle::whereIn('id', [1,2])->get();
+        $cattle = Cattle::whereIn('id', [1])->get();
 
         return $this->getEvolution($cattle, $from, $to, $osc, 1);
     }
 
     public function getAchievementExpected(Request $request){
        
-        $from = $this->minDate([1,2]);
-        $to = $this->maxDate([1,2]);
+        $from = $this->minDate([1],2);
+        $to = $this->maxDate([1],2);
         
         $term = 150;
         $osc = 1;
         $final_weight = 400;
 
-        $cattle = Cattle::whereIn('id', [1,2])->get();
+        $cattle = Cattle::whereIn('id', [1])->get();
 
         return $this->getAchievement($cattle, $from, $to, $term, $final_weight, $osc);
 

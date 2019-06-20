@@ -37,6 +37,13 @@ class FeedlotTableSeeder extends Seeder
         $feedlot = new Feedlot();
         $feedlot->cattle_id = 1;
         $feedlot->lot_id = 2;
+        $feedlot->weight = 140;
+        $feedlot->date = Carbon::parse('2019-04-20');
+        $feedlot->save();
+
+        $feedlot = new Feedlot();
+        $feedlot->cattle_id = 1;
+        $feedlot->lot_id = 2;
         $feedlot->weight = 145;
         $feedlot->date = Carbon::parse('2019-04-30');
         $feedlot->save();
@@ -48,6 +55,7 @@ class FeedlotTableSeeder extends Seeder
         $feedlot->date = Carbon::parse('2019-05-10');
         $feedlot->save();
 
+        
         //******************************************************
         $feedlot = new Feedlot();
         $feedlot->cattle_id = 2;
@@ -69,6 +77,14 @@ class FeedlotTableSeeder extends Seeder
         $feedlot->weight = 344;
         $feedlot->date = Carbon::parse('2019-04-20');
         $feedlot->save();
+
+        $feedlot = new Feedlot();
+        $feedlot->cattle_id = 2;
+        $feedlot->lot_id = 4;
+        $feedlot->weight = 344;
+        $feedlot->date = Carbon::parse('2019-04-20');
+        $feedlot->save();
+
 
         $feedlot = new Feedlot();
         $feedlot->cattle_id = 2;
@@ -104,6 +120,13 @@ class FeedlotTableSeeder extends Seeder
         $feedlot = new Feedlot();
         $feedlot->cattle_id = 3;
         $feedlot->lot_id = 2;
+        $feedlot->weight = 260;
+        $feedlot->date = Carbon::parse('2019-04-10');
+        $feedlot->save();
+
+        $feedlot = new Feedlot();
+        $feedlot->cattle_id = 3;
+        $feedlot->lot_id = 2;
         $feedlot->weight = 270;
         $feedlot->date = Carbon::parse('2019-04-20');
         $feedlot->save();
@@ -111,6 +134,13 @@ class FeedlotTableSeeder extends Seeder
         $feedlot = new Feedlot();
         $feedlot->cattle_id = 3;
         $feedlot->lot_id = 2;
+        $feedlot->weight = 277;
+        $feedlot->date = Carbon::parse('2019-04-30');
+        $feedlot->save();
+
+        $feedlot = new Feedlot();
+        $feedlot->cattle_id = 3;
+        $feedlot->lot_id = 3;
         $feedlot->weight = 277;
         $feedlot->date = Carbon::parse('2019-04-30');
         $feedlot->save();

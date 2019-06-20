@@ -20,7 +20,7 @@ class CattleTableSeeder extends Seeder
         $cattle->gender = array_random($gender);
         $cattle->birth_date = Carbon::parse('2018-09-18');
         $cattle->weight = 120;
-        $cattle->lot_id = rand(1,4);
+        $cattle->lot_id = 2;
         $cattle->category_id = rand(1,4);
         $cattle->race_id = rand(1,6);
         $cattle->save();
@@ -30,7 +30,7 @@ class CattleTableSeeder extends Seeder
         $cattle->gender = array_random($gender);
         $cattle->birth_date = Carbon::parse('2018-01-30');
         $cattle->weight = 300;
-        $cattle->lot_id = rand(1,4);
+        $cattle->lot_id = 4;
         $cattle->category_id = rand(1,4);
         $cattle->race_id = rand(1,6);
         $cattle->save();
@@ -40,7 +40,7 @@ class CattleTableSeeder extends Seeder
         $cattle->gender = array_random($gender);
         $cattle->birth_date = Carbon::parse('2018-04-19');
         $cattle->weight = 250;
-        $cattle->lot_id = rand(1,4);
+        $cattle->lot_id = 3;
         $cattle->category_id = rand(1,4);
         $cattle->race_id = rand(1,6);
         $cattle->save();

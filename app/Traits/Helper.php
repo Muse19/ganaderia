@@ -17,16 +17,15 @@ trait Helper{
        
     }
 
-    private function minDate($cattle){
+    private function minDate($cattle, $lot){
 
-        return Carbon::parse(Feedlot::whereIn('cattle_id', $cattle)->min('date'));
+        return Carbon::parse(Feedlot::whereIn('cattle_id', $cattle)->where('lot_id',$lot)->min('date'));
     }
 
-    private function maxDate($cattle){
+    private function maxDate($cattle, $lot){
 
-        return Carbon::parse(Feedlot::whereIn('cattle_id', $cattle)->max('date'));
+        return Carbon::parse(Feedlot::whereIn('cattle_id', $cattle)->where('lot_id',$lot)->max('date'));
     }
-
     private function getRangeDate($from, $to){
 
         return Feedlot::whereBetween('date', [$from, $to])->get()
@@ -72,8 +71,8 @@ trait Helper{
         $max_lot =array();
         
         foreach($cattles as $cattle){
-            //$data = $cattle->feedlots->groupBy('lot_id');
-            $data = $cattle->lot_log;
+            $data = $cattle->feedlots->groupBy('lot_id');
+            //$data = $cattle->lot_log;
             $lots = [];
             $start_weight = 0.0;
             
@@ -81,22 +80,22 @@ trait Helper{
             
             foreach($data as $d){
                 
-                $from = Carbon::parse($d->start_date);
-                $to = isset($d->end_date) ? $d->end_date : Carbon::now();
+                //$from = Carbon::parse($d->start_date);
+                //$to = isset($d->end_date) ? $d->end_date : Carbon::now();
 
-                $feedlot = $cattle->feedlots()->whereBetween('date', [$from, $to])->get();
+                //$feedlot = $cattle->feedlots()->whereBetween('date', [$from, $to])->get();
                 
                 if($start_weight ==0.0){
-                    $start_weight = $feedlot->first()->weight;
+                    $start_weight = $d->first()->weight;
                 }
                 
-                $end_weight = $feedlot->last()->weight;
+                $end_weight = $d->last()->weight;
                 
-                $start_date = Carbon::parse($d->start_date);
-                $end_date = Carbon::parse($d->end_date);
+                $start_date = Carbon::parse($d->first()->date);
+                $end_date = Carbon::parse($d->last()->date);
                 
                 $lot_dates = (object)[
-                   'lot' => Lot::find($d->lot_id)->number,
+                    'lot' => Lot::find($d->first()->lot_id)->number,
                     'start_date' => $start_date->format('d-m-Y'),
                     'end_date' => $end_date->format('d-m-Y'),
                     'start_weight' => $start_weight,
@@ -107,7 +106,7 @@ trait Helper{
                 ];
                 
                 array_push($lots, $lot_dates);
-                $start_weight = $feedlot->last()->weight;
+                $start_weight = $d->last()->weight;
                 $lot_dates = [];
                 
             }
@@ -121,7 +120,7 @@ trait Helper{
                    'current_weight' => $cattle->feedlots->last()->weight,
                    'start_weight' => $cattle->feedlots->first()->weight,
                    'start_date' =>  Carbon::parse($cattle->feedlots->first()->date),
-                   'days' =>  Carbon::parse($cattle->lot_log->last()->end_date)->diffInDays($cattle->lot_log->first()->start_date),
+                   'days' =>  Carbon::parse($cattle->feedlots->last()->date)->diffInDays($cattle->feedlots->first()->date),
                    'evol_kg' => $cattle->feedlots->last()->weight - $cattle->feedlots->first()->weight,
                    'percent_evol' => $this->percentAchieved($cattle->feedlots->first()->weight, $cattle->feedlots->last()->weight)
                    
@@ -148,7 +147,7 @@ trait Helper{
 
             foreach($rangeDate as $i => $date){
                
-                $data = $cattle->feedlots()->where('date', $date)->first();
+                $data = $cattle->feedlots()->where('date', $date)->where('lot_id', $cattle->lot_id)->first();
 
                     $weight = (object)[
                         'weight' => isset($data->weight) ? $data->weight : null,
@@ -196,7 +195,7 @@ trait Helper{
 
             foreach($rangeDate as $i => $date){
                
-                $data = $cattle->feedlots()->where('date', $date)->first();
+                $data = $cattle->feedlots()->where('date', $date)->where('lot_id', $cattle->lot_id)->first();
 
                     if($start_weight == 0.0 || !isset($data->weight)){
                         $weight = (object)[
@@ -257,7 +256,7 @@ trait Helper{
 
             foreach($rangeDate as $i => $date){
                
-                $data = $cattle->feedlots()->where('date', $date)->first();
+                $data = $cattle->feedlots()->where('date', $date)->where('lot_id', $cattle->lot_id)->first();
 
                     if($start_weight == 0.0 || !isset($data->weight)){
                         $weight = (object)[
